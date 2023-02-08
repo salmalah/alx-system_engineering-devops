@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -R  -al /boot
+ls -a . .. /boot
