@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # This Bash script that displays numbers from 1 to 100
-n=1
-while ((n <= 100))
+for ((n=1; n<=100; n++))
 do
         if ((n % 3 == 0)); then
                 echo "Fizz"
@@ -12,5 +11,4 @@ do
         else
                 echo $n
         fi
-        ((n+=1))
 done
