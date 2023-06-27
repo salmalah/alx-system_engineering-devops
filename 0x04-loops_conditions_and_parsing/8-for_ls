@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# this is a Bash script that displays the content of the current directory
+for n in *
+do
+	echo "$n" | cut -f2 -d'-'
+done
