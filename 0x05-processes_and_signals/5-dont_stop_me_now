@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# This script displays "To infinity and beyond" and kill process
-trap 'echo "Terminated"; exit' INT
-while true; do
-  echo "To infinity and beyond"
-  sleep 2
-done
+# This script kilm "To infinity and beyond" 
+kill "$(pgrep -f 4-to_infinity_and_beyond)"
 
