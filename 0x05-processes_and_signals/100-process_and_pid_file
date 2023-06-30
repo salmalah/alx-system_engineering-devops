@@ -2,9 +2,9 @@
 # This script Creates the file /var/run/myscript.pid containing its PID
 f="/var/run/myscript.pid"
 echo $$ > "$f"
-trap 'echo "I hate the kill command"'; 'rm "$f"; exit' SIGTERM
+trap 'echo "I hate the kill command"' SIGTERM
 trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm "$f"; exit' SIGQUIT SIGTERM
+trap 'rm "$f"; exit';exit 0; SIGQUIT SIGTERM
 while true;
 do
   echo "To infinity and beyond"
