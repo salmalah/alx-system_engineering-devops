@@ -4,7 +4,7 @@ f="/var/run/myscript.pid"
 echo $$ > "$f"
 trap 'echo "I hate the kill command"' SIGTERM
 trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm "$f"; exit' SIGQUIT SIGTERM
+trap 'rm "$f"; exit 0' SIGQUIT SIGTERM
 while true;
 do
   echo "To infinity and beyond"
