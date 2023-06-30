@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # This script Creates the file /var/run/myscript.pid containing its PID
 j=0
-echo $BASHPID > /var/run/myscript.pid
-trap 'echo "I hate the kill command"; rm /var/run/myscript.pid; exit 0;' SIGTERM
+pid_f="/var/run/myscript.pid"
+echo $BASHPID > "$pid_f"
+trap 'echo "I hate the kill command"; rm "$pid_f"; exit 0;' SIGTERM
 trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm /var/run/myscript.pid; exit 0;' SIGQUIT
+trap 'rm $pid_f"; exit 0;' SIGQUIT
 while [ $j ];
 do
 	echo 'To infinity and beyond'
