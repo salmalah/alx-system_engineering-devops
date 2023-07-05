@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# netstat to get the list of listening sockets and extract the relevant information
+netstat -l --program
