@@ -1,6 +1,4 @@
 # Simple web stack
-
-[URL](https://drive.google.com/file/d/13zyK7LcRsUGSqxmNp2l3c3JdYqO1U5bF/view?usp=sharing)
 ![img](0-simple_web_stack.drawio.png)
 ## server:
 is a computer system or a software program that provides services or resources to other computers on a network in our case server has an IP address of 8.8.8.8
