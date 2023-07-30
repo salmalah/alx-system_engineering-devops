@@ -14,3 +14,10 @@ hosts the website's application code base. It processes dynamic content and gene
 stores and manages the website's data, such as user information, content, and other application-related data. in our case we use MySQL is a relational database management system (RDBMS) known for its reliability and scalability
 ## The server using to communicate with the computer of the user requesting the website
 The web server (Nginx) receives this request, and if the content is static, it can directly serve it back to the user's browser
+## Issues with this Infrastructure:
+* SPOF:
+all services are hosted on a single server, any failure or issue with that server can lead to a complete outage of the website
+* Downtime during Maintenance:
+When performing maintenance tasks, such as deploying new code or updating server configurations, the web server needs to be restarted. During this restart, the website may experience downtime, causing inconvenience to users
+* nability to Scale for High Traffic:
+With only one server, there are limitations on the amount of traffic the infrastructure can handle. As the website's popularity grows and traffic increases, a single server may not have enough resources to serve all the incoming requests effectively.
