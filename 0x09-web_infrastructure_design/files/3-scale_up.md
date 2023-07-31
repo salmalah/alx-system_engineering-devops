@@ -1,0 +1,2 @@
+# Scale up
+![img](https://github.com/salmalah/alx-system_engineering-devops/blob/master/0x09-web_infrastructure_design/files/3-scale_up.md)
