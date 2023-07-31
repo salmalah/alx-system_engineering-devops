@@ -16,3 +16,7 @@ We include two web servers running Nginx to handle user requests.
 * In this infrastructure, we are using an Active-Active setup both web servers are actively serving traffic simultaneously. an Active-Passive setup involves one server actively serving traffic while the other remains in standby mode, only taking over if the active server fails
 * Primary-Replica cluster, the primary database server is responsible for handling write operations and maintaining the most up-to-date data
 * The application communicates with the primary node of the database for write operations as only the primary is allowed to modify the data either the primary or any of the replica nodes since the replicas have a read-only copy of the data
+## Issues with this Infrastructure:
+* he load balancer, application server, and database can be single points of failure. If any of these components fail, the website's availability would be compromised
+*  The infrastructure lacks a firewall to protect the servers from unauthorized access. Additionally, there is no HTTPS configuration, which means data transmission between the users and the website is not encrypted.
+* Without a monitoring system in place, it becomes difficult to identify performance bottlenecks, resource usage, and potential issues in real-time. Monitoring is crucial for proactive maintenance and timely problem resolution
