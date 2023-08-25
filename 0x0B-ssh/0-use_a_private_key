@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# connect to my ALX server
+ssh -i ~/.ssh/school ubuntu@100.25.198.81
