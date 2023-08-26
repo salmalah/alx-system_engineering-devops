@@ -1,0 +1,6 @@
+# ssh H configuration file for the local SSH client
+Host *
+      Hostname 100.25.198.81
+      User ubuntu
+      IdentifyFile ~/.ssh/school
+      PasswordAuthentication no
