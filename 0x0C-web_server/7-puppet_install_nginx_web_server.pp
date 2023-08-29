@@ -1,40 +1,33 @@
 # Install Nginx web server
-class nginx_config {
-    package { 'nginx':
-        ensure => 'installed',
-    }
-
-    file { '/var/www/html/index.html':
-        content => 'Hello World!',
-    }
-
-    file { '/etc/nginx/sites-available/default':
-        ensure => 'file',
-        source => 'puppet:///modules/nginx_config/default',
-        require => Package['nginx'],
-    }
-
-    file { '/etc/nginx/sites-enabled/default':
-        ensure => 'link',
-        target => '/etc/nginx/sites-available/default',
-        require => File['/etc/nginx/sites-available/default'],
-    }
-
-    service { 'nginx':
-        ensure => 'running',
-        enable => true,
-        require => File['/etc/nginx/sites-enabled/default'],
-    }
+exec { 'update packages':
+  command => '/usr/bin/apt-get update'
 }
 
-class { 'nginx_config': }
+exec { 'restart nginx':
+  command => '/usr/sbin/service nginx restart',
+  require => Package['nginx']
+}
 
-nginx::resource::vhost { 'default':
-    www_root     => '/var/www/html',
-    index_files  => ['index.html'],
-    listen_port  => 80,
-    redirect     => true,
-    redirect_status => 'permanent',
-    redirect_from => '^/redirect_me$',
-    redirect_to   => 'https://www.youtube.com/watch?v=QH2-TGUlwu4',
+package { 'nginx':
+  ensure  => 'installed',
+  require => Exec['update packages']
+}
+
+file { '/var/www/html/index.html':
+  content => "Hello World!\n",
+}
+
+file { '/var/www/html/404.html':
+  content => "Ceci n'est pas une page\n",
+}
+
+$link = 'https://www.youtube.com/watch?v=QH2-TGUlwu4'
+file_line { 'Set 301 redirection':
+  ensure   => 'present',
+  after    => 'server_name\ _;',
+  path     => '/etc/nginx/sites-available/default',
+  multiple => true,
+  line     => '\trewrite ^/redirect_me/$ ${link} permanent;',
+  notify   => Exec['restart nginx'],
+  require  => File['/var/www/html/index.html']
 }
