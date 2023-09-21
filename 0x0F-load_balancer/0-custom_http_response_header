@@ -2,7 +2,7 @@
 # Install Nginx package
 apt-get update
 apt-get install -y nginx
-HOSTNAME=$(cat /etc/hostname)
+HOSTNAME=$(hostname)
 echo "server {
     listen 80 default_server;
     listen [::]:80 default_server;
