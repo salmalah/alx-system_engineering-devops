@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
-
 # Install Nginx package
 apt-get update
 apt-get install -y nginx
-
-# Get the current server's hostname
 HOSTNAME=$(cat /etc/hostname)
-
-# Configure Nginx to add a custom response header
 echo "server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -21,16 +16,8 @@ echo "server {
         echo 'Hello World!';
         add_header X-Served-By $HOSTNAME;
     }
-
-    # ... other server configuration if needed ...
 }" > /etc/nginx/sites-available/default
-
-# Create a symbolic link to enable the new configuration
 ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-
-# Test the Nginx configuration for syntax errors
 nginx -t
-
-# Reload Nginx to apply the new configuration
 systemctl reload nginx
 
