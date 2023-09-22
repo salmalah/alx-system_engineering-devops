@@ -1,23 +1,34 @@
 #!/usr/bin/env bash
-# Install Nginx package
-apt-get update
-apt-get install -y nginx
-HOSTNAME=$(hostname)
-echo "server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+# Installs Nginx with configurations
 
-    server_name _;
 
-    root /var/www/html;
-    index index.html index.htm;
+sudo apt-get update
+sudo apt-get install -y nginx
 
-    location / {
-        echo 'Hello World!';
+
+mkdir -p /var/www/html
+echo "Hello World" | sudo tee /var/www/html/index.html > /dev/null
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
+
+cat <<EOL | sudo tee /etc/nginx/sites-available/default > /dev/null
+server {
+        listen 80 default_server;
+	rewrite ^/redirect_me https://www.youtube.com/ permanent;
+        listen [::]:80 default_server;
         add_header X-Served-By $HOSTNAME;
-    }
-}" > /etc/nginx/sites-available/default
-ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-nginx -t
-systemctl reload nginx
 
+        root /var/www/html;
+
+        index index.html index.htm index.nginx-debian.html;
+	error_page 404 /custom_404.html;
+
+        server_name _;
+
+        location /404 {
+                root /var/www/html;
+                try_files $uri $uri/ =404;
+        }
+}
+EOL
+
+sudo service nginx restart
