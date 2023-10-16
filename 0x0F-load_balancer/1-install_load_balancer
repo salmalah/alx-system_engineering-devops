@@ -19,8 +19,8 @@ frontend haproxy_balancer
 
 backend webservers
     balance roundrobin
-    server 287018-web-01 100.25.198.81:80 check
-    server 287018-web-02 34.202.157.80:80 check
+    server 287018-web-01 100.27.11.52:80 check
+    server 287018-web-02 54.237.72.95:80 check
 EOL
 
 	sudo service haproxy restart
