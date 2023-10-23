@@ -12,5 +12,5 @@ if __name__ == "__main__":
 
     completed = [x.get("title") for x in todos_url if x.get("completed") is True]
     print("Employee {} is done with tasks({}/{}):".format(
-        user_url.get("name"), len(completed), len(todos)))
+        user_url.get("name"), len(completed), len(todos_url)))
     [print("\t {}".format(n)) for n in completed]
