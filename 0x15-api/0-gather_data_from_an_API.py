@@ -2,8 +2,9 @@
 """
 returns information about TODO list progress for a given employee ID
 """
-import requests
 from sys import argv
+import requests
+
 
 
 if __name__ == "__main__":
