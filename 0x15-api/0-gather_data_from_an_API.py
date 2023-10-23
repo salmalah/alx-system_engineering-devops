@@ -7,6 +7,7 @@ from sys import argv
 
 
 if __name__ == "__main__":
+    ""main api method"""
     url = "https://jsonplaceholder.typicode.com/"
     user_id = requests.get(url + "users/{}".format(argv[1])).json()
     todos = requests.get(url + "todos", params={"userId": argv[1]}).json()
