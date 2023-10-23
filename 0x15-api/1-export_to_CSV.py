@@ -4,7 +4,7 @@ extend your Python script to export data in the CSV format
 """
 import csv
 import requests
-from sys import argv
+import argv from sys
 
 if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
