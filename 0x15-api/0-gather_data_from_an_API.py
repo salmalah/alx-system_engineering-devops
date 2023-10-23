@@ -14,4 +14,4 @@ if __name__ == "__main__":
     print("Employee {} is done with tasks({}/{}):".format(
         user_id.get("name"), len(n), len(todos)))
     for t in n:
-        print("\t {}".format(t))
+        print('\t {}'.format(t.get("title")))
