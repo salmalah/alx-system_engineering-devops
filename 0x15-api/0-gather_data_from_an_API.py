@@ -6,33 +6,40 @@ import requests
 import sys
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: {} <employee_id>".format(sys.argv[0]))
-        sys.exit(1)
-    emp_id = sys.argv[1]
-    url = 'https://jsonplaceholder.typicode.com/users/{}'.format(emp_id)
-    user_response = requests.get(url)
-
-    if user_response.status_code != 200:
-        print("Error: Unable to fetch user data from the API")
+    if len(sys.argv) < 2:
+        print("Usage: {} <employee ID>".format(sys.argv[0]))
         sys.exit(1)
 
-    user_data = user_response.json()
-    emp_name = user_data.get('name', 'Unknown')
-    tasks_response = requests.get('https://jsonplaceholder.typicode.com/todos',
-                                  params={'userId': emp_id})
-
-    if tasks_response.status_code != 200:
-        print("Error: Unable to fetch tasks data from the API")
+    try:
+        emp_id = int(sys.argv[1])
+    except ValueError:
+        print("Employee ID must be an integer")
         sys.exit(1)
 
-    todos = tasks_response.json()
+    user_url = "https://jsonplaceholder.typicode.com/users/{}".format(
+        emp_id
+    )
+    todos_url = "https://jsonplaceholder.typicode.com/users/{}/todos".format(
+        emp_id
+    )
+    resp = requests.get(user_url)
+    if resp.status_code != 200:
+        print("Error: Unable to fetch user data")
+        sys.exit(1)
+    user = resp.json()
+    emp_name = user.get("name")
+    resp = requests.get(todos_url)
+    if resp.status_code != 200:
+        print("Error: Unable to fetch todos data")
+        sys.exit(1)
 
-    completed_tasks = [todo for todo in todos if todo['completed']]
-    num_completed_tasks = len(completed_tasks)
-    total_tasks = len(todos)
+    todos = resp.json()
+    done_tasks = [t for t in todos if t.get("completed")]
 
-    print("Employee {} is done with tasks({}/{}):".format(
-        emp_name, num_completed_tasks, total_tasks))
-    for task in completed_tasks:
-        print("\t {}".format(task['title']))
+    print(
+        "Employee {} is done with tasks({}/{}):".format(
+            emp_name, len(done_tasks), len(todos)
+        )
+    )
+    for t in done_tasks:
+        print("\t {}".format(t.get("title")))
