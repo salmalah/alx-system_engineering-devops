@@ -1,22 +1,19 @@
-#!/usr/bin/python3i
-"""Makes a get request to json placeholder"""
+#!/usr/bin/python3
+"""
+Exports todo list information for a given employee ID in the CSV format
+"""
+import csv
 import requests
-from sys import argv
-
-
-def main():
-    """main api method"""
-    url = f'https://jsonplaceholder.typicode.com/users/{argv[1]}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        emp = (response.json())
-        response_2 = requests.get(f'{url}/todos')
-        if response_2.status_code == 200:
-            todo = response_2.json()
-            c = [item for item in todo if item['completed']]
-            print(f'Employee {emp["name"]} is \
-                    done with tasks({len(c)}/{len(todo)}):
-
+import sys
 
 if __name__ == "__main__":
-    main()
+    uid = sys.argv[1]
+    url = "https://jsonplaceholder.typicode.com/"
+    userId = requests.get(url + "users/{}".format(uid)).json()
+    todos = requests.get(url + "todos", params={"userId": uid}).json()
+    un = userId.get("username")
+
+    with open("{}.csv".format(uid), "w", newline="") as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        for t in todos:
+            writer.writerow([uid, un, t["completed"], t["title"]])
