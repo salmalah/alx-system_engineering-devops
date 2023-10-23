@@ -6,34 +6,11 @@ import requests
 import sys
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: {} <employee_id>".format(sys.argv[0]))
-        sys.exit(1)
-    emp_id = sys.argv[1]
-    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(emp_id)
-    user_response = requests.get(user_url)
+    url = "https://jsonplaceholder.typicode.com/"
+    user_url = requests.get(url + "users/{}".format(sys.argv[1])).json()
+    todos _url = requests.get(url + "todos", params={"userId": sys.argv[1]}).json()
 
-    if user_response.status_code != 200:
-        print("Error: Unable to fetch user data from the API")
-        sys.exit(1)
-
-    user_data = user_response.json()
-    employee_name = user_data.get('name', 'Unknown')
-    tasks_url = 'https://jsonplaceholder.typicode.com/todos'
-    tasks_params = {'userId': emp_id}
-    tasks_response = requests.get(tasks_url, params=tasks_params)
-
-    if tasks_response.status_code != 200:
-        print("Error: Unable to fetch tasks data from the API")
-        sys.exit(1)
-
-    todos = tasks_response.json()
-
-    completed_tasks = [todo for todo in todos if todo['completed']]
-    num_completed_tasks = len(completed_tasks)
-    total_tasks = len(todos)
-
+    completed = [x.get("title") for x in todos_url if x.get("completed") is True]
     print("Employee {} is done with tasks({}/{}):".format(
-        employee_name, num_completed_tasks, total_tasks))
-    for task in completed_tasks:
-        print("\t {}".format(task['title']))
+        user_url.get("name"), len(completed), len(todos)))
+    [print("\t {}".format(n)) for n in completed]
