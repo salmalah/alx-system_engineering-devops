@@ -11,35 +11,38 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        emp_id = int(sys.argv[1])
+        employee_id = int(sys.argv[1])
     except ValueError:
         print("Employee ID must be an integer")
         sys.exit(1)
 
     user_url = "https://jsonplaceholder.typicode.com/users/{}".format(
-        emp_id
+        employee_id
     )
     todos_url = "https://jsonplaceholder.typicode.com/users/{}/todos".format(
-        emp_id
+        employee_id
     )
-    resp = requests.get(user_url)
-    if resp.status_code != 200:
+
+    response = requests.get(user_url)
+    if response.status_code != 200:
         print("Error: Unable to fetch user data")
         sys.exit(1)
-    user = resp.json()
-    emp_name = user.get("name")
-    resp = requests.get(todos_url)
-    if resp.status_code != 200:
+
+    user = response.json()
+    employee_name = user.get("name")
+
+    response = requests.get(todos_url)
+    if response.status_code != 200:
         print("Error: Unable to fetch todos data")
         sys.exit(1)
 
-    todos = resp.json()
-    done_tasks = [t for t in todos if t.get("completed")]
+    todos = response.json()
+    done_tasks = [task for task in todos if task.get("completed")]
 
     print(
         "Employee {} is done with tasks({}/{}):".format(
-            emp_name, len(done_tasks), len(todos)
+            employee_name, len(done_tasks), len(todos)
         )
     )
-    for t in done_tasks:
-        print("\t {}".format(t.get("title")))
+    for task in done_tasks:
+        print("\t {}".format(task.get("title")))
