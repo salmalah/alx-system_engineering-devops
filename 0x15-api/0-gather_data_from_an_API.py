@@ -18,7 +18,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     user_data = user_response.json()
-    employee_name = user_data.get('name', 'Unknown')
+    employee_name = user_data.get('name')
     tasks_url = 'https://jsonplaceholder.typicode.com/todos'
     tasks_params = {'userId': emp_id}
     tasks_response = requests.get(tasks_url, params=tasks_params)
@@ -36,4 +36,4 @@ if __name__ == "__main__":
     print("Employee {} is done with tasks({}/{}):".format(
         employee_name, num_completed_tasks, total_tasks))
     for task in completed_tasks:
-        print("\t{}".format(task['title']))
+        print("\t {}".format(task['title']))
