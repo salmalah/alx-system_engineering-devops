@@ -37,7 +37,7 @@ if __name__ == "__main__":
     with open(csv_f, mode='w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         for task in todos:
-            csv_writer.writerow([emp_id, emp_name, task['completed'], task['title']])
+            csv_writer.writerow([emp_id, emp_name,
+                                task['completed'], task['title']])
 
     print("CSV file '{}' has been created.".format(csv_f))
-
