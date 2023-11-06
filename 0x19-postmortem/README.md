@@ -28,4 +28,4 @@
   - **Enhance Monitoring System:** Set up AI-powered surveillance to spot party crashers before they cause a ruckus.
   - **Regular Incident Response Drills:** Plan monthly incident response drills, complete with fake emergencies and confetti cannons.
 
-*Thank you for joining our wild server party! With enhanced security measures and vigilant monitoring, we're ready to keep the good times rolling and the malicious traffic out. Cheers to smoother user experiences and fewer unexpected outages!*
+*Thank you for your patience and understanding during this incident. With the implementation of these measures, we are committed to providing a secure and uninterrupted user experience.*
