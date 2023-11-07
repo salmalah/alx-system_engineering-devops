@@ -1,34 +1,33 @@
 #!/usr/bin/python3
-"""
-100-count
-"""
+"""Reddit API"""
+
 import requests
+from collections import defaultdict
 
-def count_words(subreddit, word_list, after=None, word_count={}):
-    if subreddit is None or not isinstance(subreddit, str):
-        return
+def count_words(subreddit, word_list, after="", word_count=None):
+    """Count occurrences of words in subreddit titles"""
 
-    apiUrl = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    params = {'limit': 100, 'after': after}
-    headers = {"User-Agent": "MyCoolReqName/1.0 (by /u/ReplyAdventurous5909)"}
+    if word_count is None:
+        word_count = defaultdict(int)
 
-    resp = requests.get(apiUrl, params=params, headers=headers)
-    if resp.status_code == 200:
-        data = resp.json()
-        posts = data.get('data', {}).get('children', [])
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    params = {'after': after}
+    headers = {'user-agent': 'bhalut'}
 
-        for post in posts:
-            title = post['data'].get('title', '').lower()
+    response = requests.get(url, params=params, headers=headers, allow_redirects=False)
+
+    if response.status_code == 200:
+        data = response.json()
+        for topic in data['data']['children']:
+            title_words = topic['data']['title'].lower().split()
             for word in word_list:
-                if word.lower() in title and not title.startswith(word.lower() + '.') and not title.startswith(word.lower() + '!') and not title.startswith(word.lower() + '_'):
-                    word_count[word] = word_count.get(word, 0) + title.count(word.lower())
+                word_count[word.lower()] += title_words.count(word.lower())
 
-        after = data.get('data', {}).get('after')
-        if after:
-            count_words(subreddit, word_list, after, word_count)
-        else:
-            sorted_word_count = sorted(word_count.items(), key=lambda x: (-x[1], x[0].lower()))
+        after = data['data']['after']
+        if after is None:
+            sorted_word_count = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
             for word, count in sorted_word_count:
-                print("{}: {}".format(word.lower(), count))
-    else:
-        return
+                if count > 0:
+                    print(f"{word.lower()}: {count}")
+        else:
+            count_words(subreddit, word_list, after, word_count)
