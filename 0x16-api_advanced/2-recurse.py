@@ -1,25 +1,33 @@
 #!/usr/bin/python3
-""" recursivly getting hot topics """
+""" recursivly topics """
 import requests
 
 
-def recurse(subreddit, hot_list=[], after=None):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) Apple' +
-        'WebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
-    }
-    r = requests.get('https://www.reddit.com/r/{:}/hot.json?after={:}'.format(
-        subreddit, after), headers=headers, allow_redirects=False)
-    if r.status_code == 200:
-        json = r.json()
-        data_dict = json.get('data')
-        post_list = data_dict.get('children')
-        for post in post_list:
-            post_data_dict = post.get('data')
-            hot_list.append(post_data_dict.get('title'))
-        after = data_dict.get('after')
-        if data_dict.get('after') is None:
+def recurse(subreddit, hot_list=None, after=None):
+    if subreddit is None or type(subreddit) is not str:
+        return None
+    if hot_list is None:
+        hot_list = []
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    headers = {"User-Agent": "MyCoolReqName/1.0 (by /u/ReplyAdventurous5909)"}
+
+    params = {"after": after}
+
+    response = requests.get(url, headers=headers,
+                            params=params, allow_redirects=False)
+    if response.status_code == 200:
+        data = response.json()
+        children = data["data"]["children"]
+
+        for child in children:
+            hot_list.append(child["data"]["title"])
+
+        after = data["data"]["after"]
+        if after:
+            return recurse(subreddit, hot_list, after)
+        else:
             return hot_list
-        return recurse(subreddit, hot_list, after)
+    elif response.status_code == 404:
+        return None
     else:
         return None
