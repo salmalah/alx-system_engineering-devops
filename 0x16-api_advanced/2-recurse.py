@@ -7,7 +7,8 @@ import requests
 def recurse(subreddit, hot_list=[], after=None):
     if subreddit is None or not isinstance(subreddit, str):
         return None
-    
+    if hot_list is None:
+        hot_list = []
     apiUrl = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
     params = {'limit': 100, 'after': after}
     headers = {"User-Agent": "MyCoolReqName/1.0 (by /u/ReplyAdventurous5909)"}
