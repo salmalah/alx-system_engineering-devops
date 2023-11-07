@@ -3,43 +3,44 @@
 import requests
 
 
-def count_words(subreddit, word_list, word_count=None, after=None):
-    """ get recur """
-    if word_count is None:
-        word_count = {}
-    if subreddit is None or type(subreddit) is not str:
+def count_words(subreddit, word_list, count_dict={}, after="", count=0):
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    headers = {
+        "User-Agent": "my_script:reddit_api:v1.0.0 (by /u/Nickname-Pending1)"
+    }
+    params = {
+        "after": after,
+        "count": count,
+        "limit": 100
+    }
+    resp = requests.get(url, headers=headers, params=params,
+                        allow_redirects=False)
+    try:
+        result = resp.json()
+        if resp.status_code == 404:
+            raise Exception
+    except Exception:
+        print("")
         return
 
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {"User-Agent": "MyCoolReqName/1.0 (by /u/ReplyAdventurous5909)"}
+    result = result.get("data")
+    after = result.get("after")
+    count += result.get("dist")
+    for c in result.get("children"):
+        title = c.get("data").get("title").lower().split()
+        for word in word_list:
+            if word.lower() in title:
+                times = len([t for t in title if t == word.lower()])
+                if count_dict.get(word) is None:
+                    count_dict[word] = times
+                else:
+                    count_dict[word] += times
 
-    params = {"after": after}
-
-    response = requests.get(url, headers=headers,
-                            params=params, allow_redirects=False)
-    if response.status_code == 200:
-        data = response.json()
-        children = data["data"]["children"]
-
-        for child in children:
-            title = child["data"]["title"].lower()
-
-            for word in word_list:
-                word = word.lower()
-
-                if word in title:
-                    word_count[word] = word_count.get(word, 0) + 1
-
-        after = data["data"]["after"]
-        if after:
-            return count_words(subreddit, word_list, word_count, after)
-        else:
-            sorted_word_count = sorted(word_count.items(),
-                                       key=lambda x: (-x[1], x[0]))
-            for word, count in sorted_word_count:
-                print(f"{word}: {count}")
+    if after is None:
+        if len(count_dict) == 0:
+            print("")
             return
-    elif response.status_code == 404:
-        return
+        count_dict = sorted(count_dict.items(), key=lambda kv: (-kv[1], kv[0]))
+        [print("{}: {}".format(k, v)) for k, v in count_dict]
     else:
-        return
+        count_words(subreddit, word_list, count_dict, after, count)
