@@ -19,17 +19,19 @@ def count_words(subreddit, word_list, after=None, word_count={}):
         posts = data.get('data', {}).get('children', [])
 
         for post in posts:
-            title = post['data'].get('title', '').lower()
-            for word in word_list:
-                if word.lower() in title and not title.startswith(word.lower() + '.') and not title.startswith(word.lower() + '!') and not title.startswith(word.lower() + '_'):
-                    word_count[word] = word_count.get(word, 0) + title.count(word.lower())
+            t = post['data'].get('title', '').lower()
+            for w in word_list:
+                if w.lower() in t and not t.startswith(w.lower() + '.') \
+                        and not t.startswith(w.lower() + '!') \
+                        and not t.startswith(w.lower() + '_'):
+                    word_count[w] = word_count.get(w, 0) + t.count(w.lower())
 
         after = data.get('data', {}).get('after')
         if after:
             count_words(subreddit, word_list, after, word_count)
         else:
-            sorted_word_count = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
-            for word, count in sorted_word_count:
+            sortd_w_c = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
+            for word, count in sortd_w_c:
                 print("{}: {}".format(word.lower(), count))
     else:
         return
