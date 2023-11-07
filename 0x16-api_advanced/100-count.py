@@ -1,38 +1,45 @@
 #!/usr/bin/python3
-"""Reddit API"""
-
+""" recursivly getting hot topics """
 import requests
-from collections import defaultdict
 
-def count_words(subreddit, word_list, after="", word_count=None):
-    """Count occurrences of words in subreddit titles"""
 
+def count_words(subreddit, word_list, word_count=None, after=None):
+    """ get recur """
     if word_count is None:
-        word_count = defaultdict(int)
+        word_count = {}
+    if subreddit is None or type(subreddit) is not str:
+        return
 
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    params = {'after': after}
-    headers = {'user-agent': 'bhalut'}
+    headers = {"User-Agent": "MyCoolReqName/1.0 (by /u/ReplyAdventurous5909)"}
 
-    response = requests.get(url, params=params, headers=headers, allow_redirects=False)
+    params = {"after": after}
 
+    response = requests.get(url, headers=headers,
+                            params=params, allow_redirects=False)
     if response.status_code == 200:
         data = response.json()
-        for topic in data['data']['children']:
-            title_words = topic['data']['title'].lower().split()
+        children = data["data"]["children"]
+
+        for child in children:
+            title = child["data"]["title"].lower()
+
             for word in word_list:
-                word_count[word.lower()] += title_words.count(word.lower())
+                word = word.lower()
 
-        after = data['data']['after']
-        if after is None:
-            sorted_word_count = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
-            for word, count in sorted_word_count:
-                if count > 0:
-                    print(f"{word.lower()}: {count}")
+                if word in title:
+                    word_count[word] = word_count.get(word, 0) + 1
+
+        after = data["data"]["after"]
+        if after:
+            return count_words(subreddit, word_list, word_count, after)
         else:
-            count_words(subreddit, word_list, after, word_count)
-
-if __name__ == "__main__":
-    subreddit = input("Enter subreddit: ")
-    words = input("Enter words (separated by space): ").split()
-    count_words(subreddit, words)
+            sorted_word_count = sorted(word_count.items(),
+                                       key=lambda x: (-x[1], x[0]))
+            for word, count in sorted_word_count:
+                print(f"{word}: {count}")
+            return
+    elif response.status_code == 404:
+        return
+    else:
+        return
