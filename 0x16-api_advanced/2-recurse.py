@@ -1,30 +1,33 @@
 #!/usr/bin/python3
-"""
-Recursivly getting hot topics
-"""
+""" recursivly getting hot topics """
 import requests
 
 
-def recurse(subreddit, hot_list=[], after=None):
-    if subreddit is None or not isinstance(subreddit, str):
+def recurse(subreddit, hot_list=None, after=None):
+    if subreddit is None or type(subreddit) is not str:
         return None
+    if hot_list is None:
+        hot_list = []
     apiUrl = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    params = {"after": after}
     headers = {"User-Agent": "MyCoolReqName/1.0 (by /u/ReplyAdventurous5909)"}
-    resp = requests.get(apiUrl, params=params, headers=headers)
+
+    params = {"after": after}
+
+    resp = requests.get(apiUrl, headers=headers,
+                            params=params, allow_redirects=False)
     if resp.status_code == 200:
         data = resp.json()
-        posts = data.get('data', {}).get('children', [])
-        
-        for post in posts:
-            title = post['data'].get('title')
-            if title:
-                hot_list.append(title)
-        
-        after = data.get('data', {}).get('after')
+        children = data["data"]["children"]
+
+        for child in children:
+            hot_list.append(child["data"]["title"])
+
+        after = data["data"]["after"]
         if after:
-            recurse(subreddit, hot_list, after)
-        
-        return hot_list
+            return recurse(subreddit, hot_list, after)
+        else:
+            return hot_list
+    elif resp.status_code == 404:
+        return None
     else:
         return None
