@@ -31,3 +31,8 @@ def count_words(subreddit, word_list, after="", word_count=None):
                     print(f"{word.lower()}: {count}")
         else:
             count_words(subreddit, word_list, after, word_count)
+
+if __name__ == "__main__":
+    subreddit = input("Enter subreddit: ")
+    words = input("Enter words (separated by space): ").split()
+    count_words(subreddit, words)
