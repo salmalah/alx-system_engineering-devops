@@ -10,7 +10,7 @@ def count_words(subreddit, word_list, word_count=None, after=None):
     if subreddit is None or type(subreddit) is not str:
         return
 
-    url = "https://www.reddit.com/r/{subreddit}/hot.json".format(subreddit)
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
     headers = {"User-Agent": "MyCoolReqName/1.0 (by /u/ReplyAdventurous5909)"}
 
     params = {"after": after}
